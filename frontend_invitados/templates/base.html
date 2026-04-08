@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Fiestas Clandestinas{% endblock %}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --surface: #1a1a2e;
+      --card: #16213e;
+      --accent: #e94560;
+      --accent2: #0f3460;
+      --text: #eaeaea;
+      --muted: #888;
+      --success: #2ecc71;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+      --radius: 10px;
+      --font: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+    }
+
+    nav {
+      background: var(--surface);
+      border-bottom: 2px solid var(--accent);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    nav .brand {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.4rem 1rem;
+      border-radius: var(--radius);
+      transition: background 0.2s;
+    }
+
+    nav a:hover, nav a.active {
+      background: var(--accent2);
+      color: var(--accent);
+    }
+
+    main { padding: 2rem; max-width: 1100px; margin: 0 auto; }
+
+    h1 { font-size: 2rem; color: var(--accent); margin-bottom: 1.5rem; }
+    h2 { font-size: 1.4rem; color: var(--text); margin-bottom: 1rem; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.2rem;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: var(--accent); }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .badge-success { background: #1a4a2e; color: var(--success); }
+    .badge-warning { background: #4a3a0d; color: var(--warning); }
+    .badge-danger  { background: #4a1a1a; color: var(--danger); }
+
+    .btn {
+      display: inline-block;
+      padding: 0.6rem 1.4rem;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-secondary { background: var(--accent2); color: var(--text); }
+
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; color: var(--muted); font-size: 0.85rem; margin-bottom: 0.3rem; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      background: #0d0d0d;
+      border: 1px solid var(--accent2);
+      border-radius: var(--radius);
+      color: var(--text);
+      padding: 0.6rem 0.9rem;
+      font-size: 0.95rem;
+      font-family: var(--font);
+    }
+    .form-group input:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .alert {
+      padding: 0.9rem 1.2rem;
+      border-radius: var(--radius);
+      margin-bottom: 1.2rem;
+      font-weight: 500;
+    }
+    .alert-success { background: #1a4a2e; color: var(--success); border: 1px solid var(--success); }
+    .alert-error   { background: #4a1a1a; color: var(--danger);  border: 1px solid var(--danger); }
+
+    .grid { display: grid; gap: 1.2rem; }
+    .grid-2 { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+
+    .meta { color: var(--muted); font-size: 0.88rem; margin-top: 0.3rem; }
+    .cupos { font-size: 0.9rem; margin-top: 0.6rem; }
+    .cupos span { font-weight: 700; color: var(--accent); }
+  </style>
+  {% block extra_style %}{% endblock %}
+</head>
+<body>
+  <nav>
+    <span class="brand">🎉 Fiestas Clandestinas</span>
+    <a href="/invitados/" {% if active == 'invitados' %}class="active"{% endif %}>Invitados</a>
+    <a href="/localizacion/" {% if active == 'localizacion' %}class="active"{% endif %}>Localizar Fiestas</a>
+  </nav>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

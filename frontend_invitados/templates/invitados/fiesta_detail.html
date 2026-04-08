@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}{{ fiesta.nombre }} — Invitados{% endblock %}
+
+{% block content %}
+<a href="/invitados/" class="btn btn-secondary" style="margin-bottom:1.5rem; display:inline-block;">← Volver</a>
+
+<h1>{{ fiesta.nombre }}</h1>
+<p class="meta">📍 {{ fiesta.ubicacion }}</p>
+<p class="meta">📅 {{ fiesta.fecha }} &nbsp;·&nbsp; 🕐 {{ fiesta.hora }}</p>
+{% if fiesta.descripcion %}
+<p style="margin-top:0.8rem; color:var(--muted);">{{ fiesta.descripcion }}</p>
+{% endif %}
+
+<div style="display:flex; gap:1rem; margin:1rem 0; flex-wrap:wrap;">
+  <span class="badge badge-warning">Capacidad: {{ fiesta.capacidad }}</span>
+  <span class="badge badge-success">Confirmados: {{ fiesta.invitados_confirmados }}</span>
+  {% if fiesta.cupos_disponibles > 0 %}
+    <span class="badge badge-success">Cupos libres: {{ fiesta.cupos_disponibles }}</span>
+  {% else %}
+    <span class="badge badge-danger">Sin cupos</span>
+  {% endif %}
+</div>
+
+{% if mensaje %}
+<div class="alert alert-success">✅ {{ mensaje }}</div>
+{% endif %}
+{% if error %}
+<div class="alert alert-error">⚠️ {{ error }}</div>
+{% endif %}
+
+{% if fiesta.cupos_disponibles > 0 %}
+<div class="card" style="margin-top:1.5rem;">
+  <h2>Registrar nuevo invitado</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label>Nombre completo</label>
+      <input type="text" name="nombre" placeholder="Ej: Juan Pérez" required />
+    </div>
+    <div class="form-group">
+      <label>Contacto (correo o teléfono)</label>
+      <input type="text" name="contacto" placeholder="Ej: juan@correo.com o 8888-0000" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Confirmar invitado</button>
+  </form>
+</div>
+{% endif %}
+
+<div class="card" style="margin-top:1.5rem;">
+  <h2>Invitados ({{ invitados|length }})</h2>
+  {% if invitados %}
+    <table style="width:100%; border-collapse:collapse; font-size:0.93rem;">
+      <thead>
+        <tr style="color:var(--muted); text-align:left; border-bottom:1px solid var(--accent2);">
+          <th style="padding:0.5rem;">Nombre</th>
+          <th style="padding:0.5rem;">Contacto</th>
+          <th style="padding:0.5rem;">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for inv in invitados %}
+        <tr style="border-bottom:1px solid #1a1a2e;">
+          <td style="padding:0.6rem 0.5rem;">{{ inv.nombre }}</td>
+          <td style="padding:0.6rem 0.5rem; color:var(--muted);">{{ inv.contacto }}</td>
+          <td style="padding:0.6rem 0.5rem;">
+            {% if inv.estado == 'confirmado' %}
+              <span class="badge badge-success">{{ inv.estado }}</span>
+            {% elif inv.estado == 'rechazado' %}
+              <span class="badge badge-danger">{{ inv.estado }}</span>
+            {% else %}
+              <span class="badge badge-warning">{{ inv.estado }}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p style="color:var(--muted);">Aún no hay invitados registrados.</p>
+  {% endif %}
+</div>
+{% endblock %}

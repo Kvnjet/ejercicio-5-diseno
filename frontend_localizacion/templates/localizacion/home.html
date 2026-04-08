@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Localizar Fiestas{% endblock %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  #map { height: 420px; border-radius: var(--radius); border: 1px solid var(--accent2); margin-bottom: 1.5rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+  <h1 style="margin:0;">🗺️ Localizar Fiestas</h1>
+  <a href="/localizacion/nueva/" class="btn btn-primary">+ Publicar fiesta</a>
+</div>
+
+<div id="map"></div>
+
+{% if fiestas %}
+<div class="grid grid-2">
+  {% for fiesta in fiestas %}
+  <div class="card">
+    <h2>{{ fiesta.nombre }}</h2>
+    <p class="meta">📍 {{ fiesta.ubicacion }}</p>
+    <p class="meta">📅 {{ fiesta.fecha }} &nbsp;·&nbsp; 🕐 {{ fiesta.hora }}</p>
+    {% if fiesta.descripcion %}
+    <p style="margin-top:0.5rem; font-size:0.9rem; color:var(--muted);">{{ fiesta.descripcion }}</p>
+    {% endif %}
+    <p class="cupos">Cupos disponibles: <span>{{ fiesta.cupos_disponibles }}</span> / {{ fiesta.capacidad }}</p>
+    {% if fiesta.latitud and fiesta.longitud %}
+    <p class="meta" style="margin-top:0.4rem;">🌐 {{ fiesta.latitud|floatformat:4 }}, {{ fiesta.longitud|floatformat:4 }}</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card">
+  <p style="color:var(--muted);">No hay fiestas registradas. <a href="/localizacion/nueva/" style="color:var(--accent);">Publica la primera.</a></p>
+</div>
+{% endif %}
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  const map = L.map('map').setView([9.9341, -84.0603], 8);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  const fiestas = [
+    {% for fiesta in fiestas %}
+    {% if fiesta.latitud and fiesta.longitud %}
+    {
+      nombre: "{{ fiesta.nombre|escapejs }}",
+      ubicacion: "{{ fiesta.ubicacion|escapejs }}",
+      fecha: "{{ fiesta.fecha }}",
+      cupos: {{ fiesta.cupos_disponibles }},
+      lat: {{ fiesta.latitud }},
+      lng: {{ fiesta.longitud }},
+    },
+    {% endif %}
+    {% endfor %}
+  ];
+
+  fiestas.forEach(f => {
+    const marker = L.marker([f.lat, f.lng]).addTo(map);
+    marker.bindPopup(`
+      <strong>${f.nombre}</strong><br>
+      📍 ${f.ubicacion}<br>
+      📅 ${f.fecha}<br>
+      🎟️ Cupos: ${f.cupos}
+    `);
+  });
+</script>
+{% endblock %}

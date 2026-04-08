@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Invitados — Fiestas Clandestinas{% endblock %}
+
+{% block content %}
+<h1>🕵️ Registrar Invitados</h1>
+<p style="color: var(--muted); margin-bottom: 1.5rem;">
+  Selecciona una fiesta para ver los invitados confirmados o registrar uno nuevo.
+</p>
+
+{% if fiestas %}
+<div class="grid grid-2">
+  {% for fiesta in fiestas %}
+  <div class="card">
+    <h2>{{ fiesta.nombre }}</h2>
+    <p class="meta">📍 {{ fiesta.ubicacion }}</p>
+    <p class="meta">📅 {{ fiesta.fecha }} &nbsp;·&nbsp; 🕐 {{ fiesta.hora }}</p>
+    <p class="cupos">
+      Cupos disponibles: <span>{{ fiesta.cupos_disponibles }}</span> / {{ fiesta.capacidad }}
+    </p>
+    <div style="margin-top: 1rem;">
+      {% if fiesta.cupos_disponibles > 0 %}
+        <span class="badge badge-success">Disponible</span>
+      {% else %}
+        <span class="badge badge-danger">Sin cupos</span>
+      {% endif %}
+      &nbsp;
+      <a href="/invitados/fiesta/{{ fiesta.id }}/" class="btn btn-primary" style="margin-top:0.5rem;">
+        Ver & Registrar
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card">
+  <p style="color: var(--muted);">No hay fiestas registradas aún. Ve a <a href="/localizacion/nueva/" style="color:var(--accent);">Localización</a> para crear una.</p>
+</div>
+{% endif %}
+{% endblock %}
