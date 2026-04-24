@@ -28,8 +28,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'frontend_invitados' / 'templates',
-            BASE_DIR / 'frontend_localizacion' / 'templates',
+            BASE_DIR.parent / 'frontend_invitados' / 'templates',
+            BASE_DIR.parent / 'frontend_localizacion' / 'templates',
         ],
         'APP_DIRS': False,
         'OPTIONS': {
